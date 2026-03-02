@@ -4,6 +4,16 @@ All notable changes to this project will be documented in this file.
 
 ---
 
+## [1.3.3] - 2026-03-02
+
+### Fixed
+- **Batch Import** now preserves the original key name (`url` or `baseUrl`) and URL format (with or without `/sse` suffix) when generating the new proxy config — output matches the shape of the original input exactly.
+
+### Changed
+- `detectServerType` now recognises both `url` and `baseUrl` fields as HTTP/SSE type.
+
+---
+
 ## [1.3.2] - 2026-03-02
 
 ### Changed

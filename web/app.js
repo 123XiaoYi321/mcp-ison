@@ -207,8 +207,8 @@ document.addEventListener('keydown', (e) => {
  * 返回 'http' | 'stdio' | 'unknown'
  */
 function detectServerType(cfg) {
-    // 有 url 字段且 type 指向远程（sse / streamableHttp / http / streamable_http）
-    if (cfg.url) return 'http';
+    // 有 url 或 baseUrl 字段（远程 HTTP/SSE 服务）
+    if (cfg.url || cfg.baseUrl) return 'http';
     // 有 command 字段（stdio 模式）
     if (cfg.command) return 'stdio';
     return 'unknown';
@@ -250,27 +250,39 @@ async function importBatch() {
     // 分类处理，并行注册 HTTP 代理
     const results = [];
     const stdioConfig = { mcpServers: {} };  // stdio 类型生成的新配置（纯前端）
+    const batchHttpConfig = { mcpServers: {} }; // HTTP 类型前端自己构建的新配置
     const httpPromises = [];
+    const port = window.location.port || 4000;
 
     for (const name of names) {
         const cfg = servers[name];
         const type = detectServerType(cfg);
 
         if (type === 'http') {
+            // 保留原始键名（url 或 baseUrl）和 URL 格式（是否带 /sse 后缀）
+            const originalKey = cfg.baseUrl !== undefined ? 'baseUrl' : 'url';
+            const originalUrl = cfg.url || cfg.baseUrl || '';
+            const urlPath = originalUrl.split('?')[0];
+            const hasSse = urlPath.endsWith('/sse');
+
             // 为 name 做安全化处理（与后端保持一致）
             const safeName = name.replace(/[^a-zA-Z0-9_-]/g, '-').toLowerCase();
+            const localUrl = `http://localhost:${port}/${safeName}${hasSse ? '/sse' : ''}`;
+
             httpPromises.push(
                 fetch(`${API}/api/servers`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ name: safeName, url: cfg.url })
+                    body: JSON.stringify({ name: safeName, url: originalUrl })
                 })
                     .then(r => r.json())
                     .then(data => {
                         if (data.success) {
+                            // 用原键名和原格式构建新配置条目
+                            batchHttpConfig.mcpServers[name] = { [originalKey]: localUrl };
                             results.push({
                                 name, type: 'http', status: 'success',
-                                desc: `已注册代理 → http://localhost:${window.location.port || 4000}/${data.name}/sse`
+                                desc: `已注册代理 → ${localUrl}`
                             });
                         } else {
                             results.push({ name, type: 'http', status: 'error', desc: data.error || '注册失败' });
@@ -310,37 +322,17 @@ async function importBatch() {
     // 等待所有 HTTP 注册完成
     await Promise.all(httpPromises);
 
-    // 如果有 stdio 类型，在右下角的配置输出底部追加 stdio 的新配置
-    if (Object.keys(stdioConfig.mcpServers).length > 0) {
-        const existingEl = document.getElementById('config-output');
-        let existingCfg = {};
-        try { existingCfg = JSON.parse(existingEl.textContent); } catch (e) { }
-        // 合并：HTTP 代理配置 + stdio 配置
-        const merged = {
-            mcpServers: {
-                ...(existingCfg.mcpServers),
-                ...stdioConfig.mcpServers
-            }
-        };
-        existingEl.textContent = JSON.stringify(merged, null, 2);
-    }
+    // 刷新代理列表（侧边栏展示用）
+    await loadProxies();
 
-    // 刷新 HTTP 代理列表 + 配置（让 HTTP 部分也更新）
-    await Promise.all([loadProxies(), loadConfig()]);
-
-    // 如果有 stdio，再次合并（loadConfig 会覆盖掉 stdio 部分）
-    if (Object.keys(stdioConfig.mcpServers).length > 0) {
-        const cfgEl = document.getElementById('config-output');
-        let httpCfg = {};
-        try { httpCfg = JSON.parse(cfgEl.textContent); } catch (e) { }
-        const merged = {
-            mcpServers: {
-                ...(httpCfg.mcpServers),
-                ...stdioConfig.mcpServers
-            }
-        };
-        cfgEl.textContent = JSON.stringify(merged, null, 2);
-    }
+    // 前端自己合并 HTTP + stdio 配置输出（保留原键名和 URL 格式）
+    const merged = {
+        mcpServers: {
+            ...batchHttpConfig.mcpServers,
+            ...stdioConfig.mcpServers
+        }
+    };
+    document.getElementById('config-output').textContent = JSON.stringify(merged, null, 2);
 
     // 渲染结果列表
     const successCount = results.filter(r => r.status === 'success' || r.status === 'info' || r.status === 'warning').length;

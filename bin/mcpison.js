@@ -245,16 +245,22 @@ const rlStdin = readline.createInterface({
 });
 
 // 记录所有 Client 发送过来的 "tools/call" 请求的 ID
-const pendingCallToolIds = new Set();
+// 使用 Map 存储 { id -> timeoutHandle }，防止服务端无响应导致内存泄漏
+const PENDING_TIMEOUT_MS = 60_000; // 60 秒后自动清理无响应的 id
+const pendingCallToolIds = new Map();
 
 rlStdin.on('line', (line) => {
   if (!line.trim()) return;
 
   try {
     const req = JSON.parse(line);
-    // 拦截识别 tools/call
+    // 拦截识别 tools/call，注册超时清理
     if (req.method === 'tools/call' && req.id !== undefined) {
-      pendingCallToolIds.add(req.id);
+      const timer = setTimeout(() => {
+        pendingCallToolIds.delete(req.id);
+      }, PENDING_TIMEOUT_MS);
+      if (timer.unref) timer.unref(); // 不阻止进程正常退出
+      pendingCallToolIds.set(req.id, timer);
     }
   } catch (err) {
   }
@@ -285,6 +291,10 @@ rlStdout.on('line', (line) => {
 
     if (res.id !== undefined && res.result && res.result.content && Array.isArray(res.result.content)) {
       if (pendingCallToolIds.has(res.id)) {
+        // 清除超时定时器，避免内存泄漏
+        clearTimeout(pendingCallToolIds.get(res.id));
+        pendingCallToolIds.delete(res.id);
+
         let tokenSaved = 0;
         let origLength = 0;
         let newLength = 0;
@@ -306,8 +316,6 @@ rlStdout.on('line', (line) => {
             }
           }
         }
-
-        pendingCallToolIds.delete(res.id);
 
         if (isDebug && tokenSaved > 0) {
           console.error(`[mcpison DEBUG] Request ID ${res.id} Optimized: ${origLength} bytes -> ${newLength} bytes (Saved ~${tokenSaved} bytes)`);

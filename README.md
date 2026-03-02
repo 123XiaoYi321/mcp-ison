@@ -7,9 +7,7 @@
 <a name="english"></a>
 ## English
 
-`mcpison` is a minimal and transparent MCP (Model Context Protocol) transport interceptor. It converts the heavy JSON responses from existing MCP Servers into the ultra-lightweight **ISON format** in real-time, dramatically reducing LLM token consumption.
-
-**The best part: no modifications to your original MCP Server code are needed.**
+`mcpison` is a transparent MCP (Model Context Protocol) transport interceptor. It converts JSON responses from MCP Servers into the lightweight **ISON format** in real-time, reducing LLM token consumption without modifying the original MCP Server code.
 
 ### Installation
 
@@ -19,27 +17,34 @@ npm install -g mcpison
 
 ---
 
-### Usage 1: Local stdio Proxy
+### Usage 1: Web Management UI
 
-For traditional MCP Servers running locally via stdio (e.g., Python/Node scripts), simply prepend `mcpison` to your command in the MCP client configuration:
+A visual interface for managing proxy configurations. Start it with:
 
-```json
-"mcpServers": {
-  "my-local-server": {
-    "command": "mcpison",
-    "args": ["python", "/path/to/sql-server.py"]
-  }
-}
+```bash
+mcpison-ui
+# Open http://localhost:4000
 ```
 
-> Add `--debug` as the first item in `args` to see byte savings in your client's debug logs:
-> `"args": ["--debug", "python", "/path/to/sql-server.py"]`
+Use a custom port:
+
+```bash
+mcpison-ui --port 8080
+```
+
+Paste your existing `mcpServers` JSON block into the **Batch Import** tab. It will:
+- Detect each server's transport type (HTTP/SSE or stdio)
+- Register remote HTTP endpoints as local proxy routes
+- Wrap local stdio commands with `mcpison`
+- Output the complete updated configuration
+
+Individual tabs for adding HTTP/SSE or stdio servers manually are also available.
 
 ---
 
 ### Usage 2: Remote HTTP/SSE API Proxy *(Added in v1.1.0)*
 
-For remote MCP Servers that only expose a URL, **mcpison acts as a reverse-proxy micro-gateway**.
+For remote MCP Servers that expose a URL, mcpison acts as a local reverse proxy.
 
 #### Option A: Proxy a Single Endpoint
 
@@ -47,7 +52,7 @@ For remote MCP Servers that only expose a URL, **mcpison acts as a reverse-proxy
 mcpison --proxy-url https://mcp.api-inference.modelscope.net/123456/mcp --port 3000
 ```
 
-Then update your MCP client config:
+Update your MCP client config:
 
 ```json
 "mcpServers": {
@@ -84,56 +89,9 @@ mcpison --config mcp-routes.json --port 3000
 
 ---
 
-### Usage 3: Web Management UI *(Recommended)*
+### Usage 3: Local stdio Proxy
 
-The fastest way to get started! A visual management interface that lets you paste your existing MCP config and automatically generates the optimized proxy config — no manual CLI needed.
-
-```bash
-mcpison-ui
-# Then open http://localhost:4000
-```
-
-Use a custom port:
-
-```bash
-mcpison-ui --port 8080
-```
-
-**🌟 Highlight Feature: Batch Import**
-Just paste your entire `mcpServers` JSON block into the web UI. It will automatically:
-- Detect each server's transport type (HTTP/SSE or stdio)
-- Register remote HTTP endpoints as proxy routes in the background
-- Wrap local stdio commands with `mcpison`
-- Output the complete, ready-to-use new configuration
-
-*(Individual tabs for adding HTTP/SSE or stdio servers manually are also available).*
-
----
-
-Regardless of which mode you use, all client traffic flows through mcpison. It compresses the heavy JSON in memory and transparently returns ISON — all without touching the original server code.
-
-🚀 **Enjoy Token Freedom!**
-
----
-
-<a name="中文"></a>
-## 中文
-
-`mcpison` 是一个极简且透明的 MCP (Model Context Protocol) 传输层拦截代理。它可以将现有的 MCP Server 返回的庞大 JSON 数据实时转换为极端轻量级的 **ISON 格式**，大幅节约大语言模型的 Token。
-
-**最重要的特点是：无需修改任何原本的 MCP Server 代码。**
-
-### 安装
-
-```bash
-npm install -g mcpison
-```
-
----
-
-### 用法 1：本地命令行工具 (stdio)
-
-对于传统的运行在本地、使用 stdio 通信的 MCP Server，只需在配置文件中把 `mcpison` 垫在命令前：
+For MCP Servers running locally via stdio, prepend `mcpison` to your command in the MCP client configuration:
 
 ```json
 "mcpServers": {
@@ -144,13 +102,56 @@ npm install -g mcpison
 }
 ```
 
-> 在 `args` 首位加上 `--debug` 可在客户端调试日志中看到节省了多少字节。
+> Add `--debug` as the first item in `args` to log byte savings:
+> `"args": ["--debug", "python", "/path/to/sql-server.py"]`
+
+---
+
+Regardless of which mode you use, all client traffic flows through mcpison. It compresses JSON in memory and returns ISON transparently, without modifying the original server code.
+
+---
+
+<a name="中文"></a>
+## 中文
+
+`mcpison` 是一个透明的 MCP (Model Context Protocol) 传输层拦截代理。它可以将 MCP Server 返回的 JSON 数据实时转换为轻量级的 **ISON 格式**，降低大语言模型的 Token 消耗，无需修改任何原本的 MCP Server 代码。
+
+### 安装
+
+```bash
+npm install -g mcpison
+```
+
+---
+
+### 用法 1：Web 管理界面
+
+提供可视化界面管理代理配置。启动方式：
+
+```bash
+mcpison-ui
+# 然后打开 http://localhost:4000
+```
+
+自定义端口：
+
+```bash
+mcpison-ui --port 8080
+```
+
+在 **批量导入** 标签页中粘贴你的 `mcpServers` JSON，系统会自动：
+- 识别每个服务器的通信类型（HTTP/SSE 或 stdio）
+- 将远程 HTTP 节点注册为本地代理路由
+- 为本地 stdio 节点添加 `mcpison` 包装
+- 输出可直接使用的完整新配置
+
+界面上也提供 HTTP/SSE 和 stdio 的独立手动添加面板。
 
 ---
 
 ### 用法 2：远程 HTTP/SSE API 代理 *(V1.1.0 新增)*
 
-对于只提供 URL 的远程 MCP Server，**mcpison 可以化身为反向代理微型网关**。
+对于只提供 URL 的远程 MCP Server，mcpison 可以作为本地反向代理。
 
 #### 方式 A：单独代理一个节点
 
@@ -191,32 +192,21 @@ mcpison --config mcp-routes.json --port 3000
 
 ---
 
-### 用法 3：Web 管理界面 *(强烈推荐)*
+### 用法 3：本地命令行工具 (stdio)
 
-最快上手的方式！可视化管理界面，只需粘贴你现有的完整 MCP 配置，即可自动生成优化后的代理配置，全程无需手动敲命令。
+对于运行在本地、使用 stdio 通信的 MCP Server，在配置文件中把 `mcpison` 前置到命令前：
 
-```bash
-mcpison-ui
-# 然后打开 http://localhost:4000
+```json
+"mcpServers": {
+  "my-local-server": {
+    "command": "mcpison",
+    "args": ["python", "/path/to/sql-server.py"]
+  }
+}
 ```
 
-自定义端口：
-
-```bash
-mcpison-ui --port 8080
-```
-
-**🌟 主推功能：一键批量导入**
-直接在界面中粘贴你完整的 `mcpServers` JSON，系统会自动：
-- 识别每个服务器的通信类型（HTTP/SSE 还是 stdio）
-- 在后台智能把 HTTP/SSE 远程节点注册为本地代理路由
-- 自动为所有本地的 stdio 节点包裹上 `mcpison` 前缀
-- 汇总输出完整、可直接复制使用的全新配置
-
-*(如果需要，你依然可以通过界面上的 HTTP/SSE 和 stdio 独立面板进行手动添加)。*
+> 在 `args` 首位加上 `--debug` 可在调试日志中查看节省的字节数。
 
 ---
 
-不论是哪一种方式，客户端所有的流量都会打到 mcpison 监听的接口；它会无缝替您向真正的远端 API 索要数据，在内存压缩巨大的 JSON 后再透明返回，而这一切完全不用修改原 Server 的代码。
-
-🚀 **Enjoy Token Freedom!**
+不论是哪种方式，客户端所有流量都通过 mcpison 转发；它在内存中将 JSON 转换为 ISON 后返回给客户端，原 Server 代码无需任何改动。

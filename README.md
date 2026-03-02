@@ -84,9 +84,9 @@ mcpison --config mcp-routes.json --port 3000
 
 ---
 
-### Usage 3: Web Management UI *(Added in v1.3.0)*
+### Usage 3: Web Management UI *(Recommended)*
 
-A visual management interface that lets you paste your existing MCP config and automatically generates the optimized proxy config — no manual CLI needed.
+The fastest way to get started! A visual management interface that lets you paste your existing MCP config and automatically generates the optimized proxy config — no manual CLI needed.
 
 ```bash
 mcpison-ui
@@ -99,14 +99,14 @@ Use a custom port:
 mcpison-ui --port 8080
 ```
 
-**Features:**
-- **HTTP/SSE tab**: Add remote MCP endpoints — they're registered as proxy routes dynamically
-- **stdio tab**: Fill in your command/args — the wrapped `mcpison` config is generated instantly
-- **Batch Import tab** *(Added in v1.3.1)*: Paste an entire `mcpServers` JSON block. The UI automatically:
-  - Detects each server's type (HTTP/SSE or stdio)
-  - Registers HTTP endpoints as proxy routes
-  - Wraps stdio commands with `mcpison`
-  - Outputs the complete new config ready to copy-paste
+**🌟 Highlight Feature: Batch Import**
+Just paste your entire `mcpServers` JSON block into the web UI. It will automatically:
+- Detect each server's transport type (HTTP/SSE or stdio)
+- Register remote HTTP endpoints as proxy routes in the background
+- Wrap local stdio commands with `mcpison`
+- Output the complete, ready-to-use new configuration
+
+*(Individual tabs for adding HTTP/SSE or stdio servers manually are also available).*
 
 ---
 
@@ -191,9 +191,9 @@ mcpison --config mcp-routes.json --port 3000
 
 ---
 
-### 用法 3：Web 管理界面 *(V1.3.0 新增)*
+### 用法 3：Web 管理界面 *(强烈推荐)*
 
-可视化管理界面，粘贴你现有的 MCP 配置，自动生成优化后的代理配置，无需手动敲命令。
+最快上手的方式！可视化管理界面，只需粘贴你现有的完整 MCP 配置，即可自动生成优化后的代理配置，全程无需手动敲命令。
 
 ```bash
 mcpison-ui
@@ -206,14 +206,14 @@ mcpison-ui
 mcpison-ui --port 8080
 ```
 
-**功能列表：**
-- **HTTP/SSE 页**：输入远程 MCP URL，动态注册到代理网关
-- **stdio 页**：填入命令和参数，自动生成包了 `mcpison` 的新配置
-- **批量导入页** *(V1.3.1 新增)*：粘贴整段 `mcpServers` JSON，系统自动：
-  - 识别每个服务器的类型（HTTP/SSE 或 stdio）
-  - 将 HTTP 节点注册为代理路由
-  - 将 stdio 节点包裹上 `mcpison`
-  - 汇总输出完整的新配置，可直接复制粘贴
+**🌟 主推功能：一键批量导入**
+直接在界面中粘贴你完整的 `mcpServers` JSON，系统会自动：
+- 识别每个服务器的通信类型（HTTP/SSE 还是 stdio）
+- 在后台智能把 HTTP/SSE 远程节点注册为本地代理路由
+- 自动为所有本地的 stdio 节点包裹上 `mcpison` 前缀
+- 汇总输出完整、可直接复制使用的全新配置
+
+*(如果需要，你依然可以通过界面上的 HTTP/SSE 和 stdio 独立面板进行手动添加)。*
 
 ---
 

@@ -4,6 +4,14 @@ All notable changes to this project will be documented in this file.
 
 ---
 
+## [1.3.2] - 2026-03-02
+
+### Changed
+- Make **Batch Import** the default active tab in Web UI.
+- Highlight Batch Import as the recommended primary usage in `README.md`.
+
+---
+
 ## [1.3.1] - 2026-03-02
 
 ### Added

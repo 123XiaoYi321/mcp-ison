@@ -40,19 +40,19 @@
 
         <!-- 类型 Tab -->
         <div class="tab-group" role="tablist">
-          <button class="tab active" id="tab-http" role="tab" aria-selected="true" onclick="switchTab('http')">
+          <button class="tab active" id="tab-batch" role="tab" aria-selected="true" onclick="switchTab('batch')">
+            📋 批量导入
+          </button>
+          <button class="tab" id="tab-http" role="tab" aria-selected="false" onclick="switchTab('http')">
             🌐 HTTP / SSE 远程
           </button>
           <button class="tab" id="tab-stdio" role="tab" aria-selected="false" onclick="switchTab('stdio')">
             💻 stdio 本地
           </button>
-          <button class="tab" id="tab-batch" role="tab" aria-selected="false" onclick="switchTab('batch')">
-            📋 批量导入
-          </button>
         </div>
 
         <!-- HTTP/SSE 表单 -->
-        <div class="tab-content" id="form-http">
+        <div class="tab-content hidden" id="form-http">
           <div class="field">
             <label class="label" for="http-name">名称 <span class="hint">（仅字母/数字/连字符）</span></label>
             <input class="input" id="http-name" type="text" placeholder="如：modelscope" autocomplete="off" />
@@ -99,7 +99,7 @@
         </div>
 
         <!-- 批量导入表单 -->
-        <div class="tab-content hidden" id="form-batch">
+        <div class="tab-content" id="form-batch">
           <div class="info-box">
             <span class="info-icon">📋</span>
             粘贴你的完整 <code>mcpServers</code> JSON 配置，系统将自动识别类型并批量处理：HTTP/SSE 节点注册为代理，stdio 节点生成包装配置。

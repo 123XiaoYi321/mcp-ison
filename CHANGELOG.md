@@ -4,6 +4,24 @@ All notable changes to this project will be documented in this file.
 
 ---
 
+## [1.3.1] - 2026-03-02
+
+### Added
+- **Batch Import** in Web UI: paste an entire `mcpServers` JSON block, the UI auto-detects each server's type, registers HTTP/SSE endpoints as proxy routes, and wraps stdio commands with `mcpison`.
+
+---
+
+## [1.3.0] - 2026-03-02
+
+### Added
+- **`mcpison-ui` command**: starts a Web management interface on `http://localhost:4000` (supports `--port`).
+- **HTTP/SSE proxy management**: add/remove remote MCP endpoints dynamically via UI — routes registered in-memory without restart.
+- **stdio config generator**: fill in command + args, get the `mcpison`-wrapped config instantly.
+- **One-click copy**: generated `mcpServers` JSON ready to paste into any MCP client.
+
+---
+
+
 ## [1.2.3] - 2026-03-02
 
 ### Fixed

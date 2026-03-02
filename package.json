@@ -1,0 +1,31 @@
+{
+    "name": "mcpison",
+    "version": "1.2.1",
+    "description": "A minimal, token-efficient MCP transport interceptor converting JSON to ISON.",
+    "main": "bin/mcpison.js",
+    "bin": {
+        "mcpison": "bin/mcpison.js"
+    },
+    "files": [
+        "bin/mcpison.js"
+    ],
+    "scripts": {
+        "test": "node test/run-test.js"
+    },
+    "keywords": [
+        "mcp",
+        "ison",
+        "proxy",
+        "interceptor",
+        "token",
+        "jsonrpc"
+    ],
+    "author": "TRX",
+    "license": "MIT",
+    "dependencies": {
+        "ison-parser": "^1.0.0"
+    },
+    "engines": {
+        "node": ">=18.0.0"
+    }
+}

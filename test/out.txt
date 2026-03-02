@@ -1,0 +1,13 @@
+Reference, FieldInfo, Block, Document, ISONError, ISONSyntaxError, ISONLRecord, ISONLParser, ISONLSerializer, loads, dumps, fromDict, jsonToISON, isonToJSON, loadsISONL, dumpsISONL, isonToISONL, isonlToISON, isonlStream, version
+Error: doc.blocks is not iterable
+TypeError: doc.blocks is not iterable
+    at Serializer.dumps (E:\代码\mcp-ison\node_modules\ison-parser\dist\ison-parser.js:594:37)
+    at Object.dumps (E:\代码\mcp-ison\node_modules\ison-parser\dist\ison-parser.js:776:27)
+    at [eval]:1:191
+    at runScriptInThisContext (node:internal/vm:219:10)
+    at node:internal/process/execution:451:12
+    at [eval]-wrapper:6:24
+    at runScriptInContext (node:internal/process/execution:449:60)
+    at evalFunction (node:internal/process/execution:283:30)
+    at evalTypeScript (node:internal/process/execution:295:3)
+    at node:internal/main/eval_string:71:3

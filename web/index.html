@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>mcpison — Web 管理界面</title>
+  <meta name="description" content="mcpison Web UI：可视化管理 MCP 代理路由，自动生成 MCP Client 配置" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <!-- 背景装饰 -->
+  <div class="bg-orb bg-orb-1"></div>
+  <div class="bg-orb bg-orb-2"></div>
+
+  <main class="container">
+    <!-- 顶部标题 -->
+    <header class="header">
+      <div class="logo">
+        <span class="logo-icon">⚡</span>
+        <span class="logo-text">mcpison</span>
+        <span class="logo-badge">Web UI</span>
+      </div>
+      <p class="header-subtitle">输入你的 MCP 配置，一键生成优化后的代理配置</p>
+    </header>
+
+    <!-- 主体区域：两列 -->
+    <div class="layout">
+
+      <!-- 左列：添加代理 -->
+      <section class="panel panel-add" id="panel-add">
+        <div class="panel-header">
+          <h2 class="panel-title">添加代理</h2>
+        </div>
+
+        <!-- 类型 Tab -->
+        <div class="tab-group" role="tablist">
+          <button class="tab active" id="tab-http" role="tab" aria-selected="true" onclick="switchTab('http')">
+            🌐 HTTP / SSE 远程
+          </button>
+          <button class="tab" id="tab-stdio" role="tab" aria-selected="false" onclick="switchTab('stdio')">
+            💻 stdio 本地
+          </button>
+        </div>
+
+        <!-- HTTP/SSE 表单 -->
+        <div class="tab-content" id="form-http">
+          <div class="field">
+            <label class="label" for="http-name">名称 <span class="hint">（仅字母/数字/连字符）</span></label>
+            <input class="input" id="http-name" type="text" placeholder="如：modelscope" autocomplete="off" />
+          </div>
+          <div class="field">
+            <label class="label" for="http-url">远程 MCP URL</label>
+            <input class="input" id="http-url" type="url" placeholder="https://mcp.example.com/api" autocomplete="off" />
+          </div>
+          <button class="btn btn-primary" id="btn-add-http" onclick="addHttpProxy()">
+            <span class="btn-icon">＋</span> 添加 HTTP 代理
+          </button>
+          <div class="msg" id="msg-http"></div>
+        </div>
+
+        <!-- stdio 表单 -->
+        <div class="tab-content hidden" id="form-stdio">
+          <div class="info-box">
+            <span class="info-icon">ℹ️</span>
+            stdio 类型无需后端管理。填入原配置后，下方会自动生成加了 <code>mcpison</code> 前缀的新配置，复制粘贴即可。
+          </div>
+          <div class="field">
+            <label class="label" for="stdio-name">服务器名称</label>
+            <input class="input" id="stdio-name" type="text" placeholder="如：my-local-server" autocomplete="off" oninput="updateStdioPreview()" />
+          </div>
+          <div class="field">
+            <label class="label" for="stdio-command">Command</label>
+            <input class="input" id="stdio-command" type="text" placeholder="python" autocomplete="off" oninput="updateStdioPreview()" />
+          </div>
+          <div class="field">
+            <label class="label" for="stdio-args">Args <span class="hint">（空格分隔）</span></label>
+            <input class="input" id="stdio-args" type="text" placeholder="/path/to/server.py" autocomplete="off" oninput="updateStdioPreview()" />
+          </div>
+          <div class="field">
+            <label class="label">生成的新配置 <span class="hint">（粘贴到 MCP Client 即可）</span></label>
+            <div class="code-block">
+              <pre id="stdio-preview" class="code">在上方填写后自动生成…</pre>
+              <button class="copy-btn" onclick="copyStdio()" title="复制">⧉</button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 右列：代理列表 + 输出配置 -->
+      <div class="right-col">
+
+        <!-- 代理列表 -->
+        <section class="panel panel-list">
+          <div class="panel-header">
+            <h2 class="panel-title">HTTP 代理列表</h2>
+            <span class="badge" id="proxy-count">0</span>
+          </div>
+          <div id="proxy-list" class="proxy-list">
+            <div class="empty-state" id="empty-state">
+              <span class="empty-icon">🔌</span>
+              <p>暂无代理，从左侧添加第一个</p>
+            </div>
+          </div>
+        </section>
+
+        <!-- 生成的 MCP Client 配置 -->
+        <section class="panel panel-config">
+          <div class="panel-header">
+            <h2 class="panel-title">生成的 MCP Client 配置</h2>
+            <button class="copy-btn-main" id="btn-copy-config" onclick="copyConfig()">⧉ 复制</button>
+          </div>
+          <div class="code-block code-block-large">
+            <pre id="config-output" class="code">{
+  "mcpServers": {}
+}</pre>
+          </div>
+          <p class="config-hint">将上方 JSON 内容复制，粘贴到你的 MCP Client 配置文件（如 <code>claude_desktop_config.json</code>）中。</p>
+        </section>
+
+      </div>
+    </div>
+  </main>
+
+  <script src="app.js"></script>
+</body>
+</html>

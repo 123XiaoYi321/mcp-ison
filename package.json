@@ -1,6 +1,6 @@
 {
     "name": "mcpison",
-    "version": "1.2.3",
+    "version": "1.3.0",
     "description": "A minimal, token-efficient MCP transport interceptor converting JSON to ISON.",
     "repository": {
         "type": "git",
@@ -12,10 +12,14 @@
     },
     "main": "bin/mcpison.js",
     "bin": {
-        "mcpison": "bin/mcpison.js"
+        "mcpison": "bin/mcpison.js",
+        "mcpison-ui": "bin/mcpison-ui.js"
     },
     "files": [
-        "bin/mcpison.js"
+        "bin/mcpison.js",
+        "bin/mcpison-ui.js",
+        "server/",
+        "web/"
     ],
     "scripts": {
         "test": "node test/run-test.js"

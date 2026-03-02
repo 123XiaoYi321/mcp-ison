@@ -278,8 +278,13 @@ async function importBatch() {
                     .then(r => r.json())
                     .then(data => {
                         if (data.success) {
-                            // 用原键名和原格式构建新配置条目
-                            batchHttpConfig.mcpServers[name] = { [originalKey]: localUrl };
+                            // 保留原始所有字段（type、headers 等），只替换 url/baseUrl 的值
+                            const newEntry = {};
+                            for (const k of Object.keys(cfg)) {
+                                if (k !== 'url' && k !== 'baseUrl') newEntry[k] = cfg[k];
+                            }
+                            newEntry[originalKey] = localUrl;
+                            batchHttpConfig.mcpServers[name] = newEntry;
                             results.push({
                                 name, type: 'http', status: 'success',
                                 desc: `已注册代理 → ${localUrl}`

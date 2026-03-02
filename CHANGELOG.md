@@ -4,10 +4,17 @@ All notable changes to this project will be documented in this file.
 
 ---
 
+## [1.3.4] - 2026-03-02
+
+### Fixed
+- **Batch Import** now preserves ALL original fields (`type`, `headers`, etc.) when generating the new proxy config — only `url`/`baseUrl` values are replaced with the local proxy address. This prevents `streamable_http` from being incorrectly changed to `sse`.
+
+---
+
 ## [1.3.3] - 2026-03-02
 
 ### Fixed
-- **Batch Import** now preserves the original key name (`url` or `baseUrl`) and URL format (with or without `/sse` suffix) when generating the new proxy config — output matches the shape of the original input exactly.
+- **Batch Import** now preserves the original key name (`url` or `baseUrl`) and URL format (with or without `/sse` suffix) when generating the new proxy config.
 
 ### Changed
 - `detectServerType` now recognises both `url` and `baseUrl` fields as HTTP/SSE type.

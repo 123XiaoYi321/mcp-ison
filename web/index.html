@@ -72,7 +72,9 @@
         <div class="tab-content hidden" id="form-stdio">
           <div class="info-box">
             <span class="info-icon">ℹ️</span>
-            stdio 类型无需后端管理。填入原配置后，下方会自动生成加了 <code>mcpison</code> 前缀的新配置，复制粘贴即可。
+            <div class="info-content">
+              stdio 类型无需后端管理。填入原配置后，下方会自动生成加了 <code>mcpison</code> 前缀的新配置，复制粘贴即可。
+            </div>
           </div>
           <div class="field">
             <label class="label" for="stdio-name">服务器名称</label>
@@ -102,13 +104,14 @@
         <div class="tab-content" id="form-batch">
           <div class="info-box">
             <span class="info-icon">📋</span>
-            粘贴你的完整 <code>mcpServers</code> JSON 配置，系统将自动识别类型并批量处理：HTTP/SSE 节点注册为代理，stdio 节点生成包装配置。
+            <div class="info-content">
+              粘贴你的完整 <code>mcpServers</code> JSON 配置，系统将自动识别类型并批量处理：HTTP/SSE 节点注册为代理，stdio 节点生成包装配置。
+            </div>
           </div>
           <div class="field">
             <label class="label" for="batch-json">粘贴 MCP 配置 JSON</label>
-            <textarea class="input textarea" id="batch-json"
-              placeholder='{ "mcpServers": { "my-server": { "url": "https://..." } } }' rows="9"
-              spellcheck="false"></textarea>
+            <textarea class="textarea" id="batch-json" rows="10" spellcheck="false"
+              placeholder='粘贴完整的 mcpServers JSON 配置...'></textarea>
           </div>
           <button class="btn btn-primary" id="btn-batch" onclick="importBatch()">
             <span class="btn-icon">⚡</span> 解析并导入

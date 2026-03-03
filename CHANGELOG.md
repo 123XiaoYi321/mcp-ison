@@ -4,6 +4,14 @@ All notable changes to this project will be documented in this file.
 
 ---
 
+## [1.3.6] - 2026-03-03
+
+### Fixed
+- **Web UI**: Fixed `info-box` layout bug where text was incorrectly rendered as two vertical columns. Changed layout from `flex` to `block` so icon and description text flow naturally on one line.
+- **Web UI**: Rewrote `.textarea` styles without `!important` overrides for stable rendering; restored purple left-border editor aesthetic.
+
+---
+
 ## [1.3.5] - 2026-03-02
 
 ### Changed

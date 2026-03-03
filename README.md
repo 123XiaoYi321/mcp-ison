@@ -1,5 +1,9 @@
 # mcpison - MCP to ISON Transport Proxy
 
+[![GitHub Stars](https://img.shields.io/github/stars/123XiaoYi321/mcp-ison?style=social)](https://github.com/123XiaoYi321/mcp-ison) [![npm](https://img.shields.io/npm/dm/mcpison)](https://www.npmjs.com/package/mcpison)
+
+> ⭐ If this tool saves you tokens, please [star it on GitHub](https://github.com/123XiaoYi321/mcp-ison)!
+
 [English](#english) | [中文](#中文)
 
 ---

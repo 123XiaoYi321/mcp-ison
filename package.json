@@ -1,6 +1,6 @@
 {
     "name": "mcpison",
-    "version": "1.3.6",
+    "version": "1.3.7",
     "description": "A minimal, token-efficient MCP transport interceptor converting JSON to ISON.",
     "repository": {
         "type": "git",

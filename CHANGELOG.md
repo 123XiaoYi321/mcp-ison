@@ -4,6 +4,14 @@ All notable changes to this project will be documented in this file.
 
 ---
 
+## [1.3.7] - 2026-03-03
+
+### Added
+- **README**: Added GitHub Stars badge and star call-to-action at the top.
+- **Web UI**: Added GitHub Star button link to the page header for discoverability.
+
+---
+
 ## [1.3.6] - 2026-03-03
 
 ### Fixed
